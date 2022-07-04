@@ -44,7 +44,7 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 
 DROP TABLE IF EXISTS result_data;
 CREATE TABLE result_data AS 
-SELECT tbl0.c1, tbl0.c2, tbl1.number
+SELECT tbl0.c1, tbl0.c2, tbl3.number
 FROM tbl0 
 JOIN  
     (SELECT tbl1.c1 AS c1, key AS letter, value AS number
