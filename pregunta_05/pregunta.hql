@@ -41,7 +41,13 @@ MAP KEYS TERMINATED BY '#'
 LINES TERMINATED BY '\n';
 LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 
-/*
-    >>> Escriba su respuesta a partir de este punto <<<
-*/
+DROP TABLE IF EXISTS result_data;
+CREATE TABLE result_data AS 
+SELECT YEAR(c4) as anio, c5_1
+FROM tbl0
+LATERAL VIEW explode(c5) tbl0 AS c5_1;
+
+INSERT OVERWRITE LOCAL DIRECTORY './output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT anio, c5_1, COUNT(c5_1) FROM result_data GROUP BY anio, c5_1 ORDER BY anio, c5_1;
 
