@@ -41,6 +41,12 @@ MAP KEYS TERMINATED BY '#'
 LINES TERMINATED BY '\n';
 LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 
-/*
-    >>> Escriba su respuesta a partir de este punto <<<
-*/
+
+DROP TABLE IF EXISTS result_data;
+CREATE TABLE result_data AS 
+SELECT explode(c5) AS c5
+FROM tbl0;
+
+INSERT OVERWRITE LOCAL DIRECTORY './output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT DISTINCT c5 FROM result_data;

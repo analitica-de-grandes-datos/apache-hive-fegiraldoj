@@ -18,7 +18,7 @@ CREATE TABLE tbl0 (
     c2 STRING,
     c3 INT,
     c4 DATE,
-    c5 ARRAY<CHAR(1)>, 
+    c5 STRING, 
     c6 MAP<STRING, INT>
 )
 ROW FORMAT DELIMITED 
@@ -42,7 +42,12 @@ MAP KEYS TERMINATED BY '#'
 LINES TERMINATED BY '\n';
 LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 
-/*
-    >>> Escriba su respuesta a partir de este punto <<<
-*/
+DROP TABLE IF EXISTS result_data;
+CREATE TABLE result_data AS 
+SELECT UPPER(c5)
+FROM tbl0;
+
+INSERT OVERWRITE LOCAL DIRECTORY './output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM result_data;
 

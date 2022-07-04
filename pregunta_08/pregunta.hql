@@ -43,7 +43,14 @@ MAP KEYS TERMINATED BY '#'
 LINES TERMINATED BY '\n';
 LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 
-/*
-    >>> Escriba su respuesta a partir de este punto <<<
-*/
+
+DROP TABLE IF EXISTS result_data;
+CREATE TABLE result_data AS 
+SELECT c2, key AS letter, value AS number
+FROM tbl0
+LATERAL VIEW explode(c6) tbl0;
+
+INSERT OVERWRITE LOCAL DIRECTORY './output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT c2, SUM(number) FROM result_data GROUP BY c2 ORDER BY c2;
 

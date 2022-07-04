@@ -26,7 +26,14 @@ CREATE TABLE t0 (
         LINES TERMINATED BY '\n';
 LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 
-/*
-    >>> Escriba su respuesta a partir de este punto <<<
-*/
+DROP TABLE IF EXISTS result_data;
+CREATE TABLE result_data AS 
+ 
+SELECT key AS letter, value AS number
+FROM t0
+LATERAL VIEW explode(c3) t0;
+
+INSERT OVERWRITE LOCAL DIRECTORY './output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT letter, count(1) FROM result_data GROUP BY letter ORDER BY letter;
 
