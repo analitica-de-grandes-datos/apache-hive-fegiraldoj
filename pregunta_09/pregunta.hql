@@ -42,7 +42,16 @@ MAP KEYS TERMINATED BY '#'
 LINES TERMINATED BY '\n';
 LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 
-/*
-    >>> Escriba su respuesta a partir de este punto <<<
-*/
+DROP TABLE IF EXISTS result_data;
+CREATE TABLE result_data AS 
+SELECT tbl0.c1, tbl0.c2, tbl1.number
+FROM tbl0 
+JOIN  
+    (SELECT tbl1.c1 AS c1, key AS letter, value AS number
+    FROM tbl1
+    LATERAL VIEW explode(c4) tbl1) AS tbl3
+    ON tbl0.c1 = tbl3.c1 AND tbl0.c2 = tbl3.letter;
 
+INSERT OVERWRITE LOCAL DIRECTORY './output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM result_data;
